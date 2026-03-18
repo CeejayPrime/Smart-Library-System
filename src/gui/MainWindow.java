@@ -51,7 +51,42 @@ public MainWindow() {
 
         String type = item.getClass().getSimpleName();
 
-        String status = item.isBorrowed() ? "Borrowed" : "Available";
+        String status;
+
+        if (item.isBorrowed()) {
+
+    if (item.getBorrowDate() != null) {
+
+        long daysBorrowed =
+            java.time.temporal.ChronoUnit.DAYS.between(
+                item.getBorrowDate(),
+                java.time.LocalDate.now());
+
+        if (daysBorrowed > 14) {
+
+            status = "Overdue (" + (daysBorrowed - 14) + " days)";
+
+        } else if (item.getReservationQueueSize() > 0) {
+
+            status = "Borrowed (" + item.getReservationQueueSize() + " waiting)";
+
+        } else {
+
+            status = "Borrowed";
+
+        }
+
+    } else {
+
+        status = "Borrowed";
+
+    }
+
+} else {
+
+    status = "Available";
+
+}
 
         model.addRow(new Object[]{
             item.getId(),
@@ -500,74 +535,61 @@ public MainWindow() {
 
     private void borrowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrowButtonActionPerformed
         // TODO add your handling code here:
-String itemId = itemIdField.getText();
+    String itemId = itemIdField.getText();
     String userId = userIdField.getText();
 
     if (itemId.isEmpty() || userId.isEmpty()) {
 
         javax.swing.JOptionPane.showMessageDialog(this,
                 "Enter both User ID and Item ID.");
-
         return;
-
     }
 
-    boolean found = false;
+    model.UserAccount user = new model.UserAccount(userId, "User");
 
     for (model.LibraryItem item : database.getItems()) {
 
         if (item.getId().equals(itemId)) {
 
-            found = true;
-
             if (item.isBorrowed()) {
 
+                item.addToReservation(user);
+
                 javax.swing.JOptionPane.showMessageDialog(this,
-                        "This item is already borrowed.");
+        "Item already borrowed.\nAdded to reservation queue.\nPosition: "
+        + item.getReservationQueueSize());
 
             } else {
 
                 item.setBorrowed(true);
-                item.setBorrowedBy(userId);   // STORE USER
+                item.setBorrowedBy(userId);
                 item.setBorrowDate(java.time.LocalDate.now());
-                
                 item.borrowCount++;
 
                 javax.swing.JOptionPane.showMessageDialog(this,
-                        "\"" + item.getTitle() + "\" has been borrowed.");
-
-                utils.FileHandler.saveItems(database.getItems(), "library_data.txt");
+                        "\"" + item.getTitle() + "\" borrowed successfully.");
 
             }
 
-            break;
-
+            utils.FileHandler.saveItems(database.getItems(), "library_data.txt");
+            refreshTable();
+            return;
         }
-
     }
 
-    if (!found) {
-
-        javax.swing.JOptionPane.showMessageDialog(this,
-                "Item not found.");
-
-    }
-
-    refreshTable();
+    javax.swing.JOptionPane.showMessageDialog(this, "Item not found.");
     }//GEN-LAST:event_borrowButtonActionPerformed
 
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
         // TODO add your handling code here:
         String itemId = itemIdField.getText();
 
-    if (itemId.isEmpty()) {
+        if (itemId.isEmpty()) {
 
-        javax.swing.JOptionPane.showMessageDialog(this,
-                "Enter Item ID to return.");
-
-        return;
-
-    }
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Enter Item ID to return.");
+            return;
+        }
 
     boolean found = false;
 
@@ -584,12 +606,31 @@ String itemId = itemIdField.getText();
 
             } else {
 
-                item.setBorrowed(false);
-                item.setBorrowedBy(null);   // CLEAR USER
-                item.setBorrowDate(null);
+                model.UserAccount nextUser = item.getNextReservation();
 
-                javax.swing.JOptionPane.showMessageDialog(this,
-                        "\"" + item.getTitle() + "\" has been returned.");
+                if (nextUser != null) {
+
+                    // Assign book to next user automatically
+                    item.setBorrowed(true);
+                    item.setBorrowedBy(nextUser.getUserId());
+                    item.setBorrowDate(java.time.LocalDate.now());
+                    item.borrowCount++;
+
+                    javax.swing.JOptionPane.showMessageDialog(this,
+                            "Book returned.\nAutomatically borrowed by next user in queue:\n"
+                            + nextUser.getUserId());
+
+                } else {
+
+                    // No reservations waiting
+                    item.setBorrowed(false);
+                    item.setBorrowedBy(null);
+                    item.setBorrowDate(null);
+
+                    javax.swing.JOptionPane.showMessageDialog(this,
+                            "\"" + item.getTitle() + "\" has been returned.");
+
+                }
 
                 utils.FileHandler.saveItems(database.getItems(), "library_data.txt");
 
@@ -609,6 +650,7 @@ String itemId = itemIdField.getText();
     }
 
     refreshTable();
+    
     }//GEN-LAST:event_returnButtonActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed

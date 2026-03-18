@@ -34,56 +34,42 @@ public class ReportGenerator {
     }
 
     // Borrowed Items Report
-    public static String mostBorrowedItems(ArrayList<LibraryItem> items) {
+   public static String mostBorrowedItems(ArrayList<LibraryItem> items) {
 
-        StringBuilder report = new StringBuilder("Borrowed Items\n\n");
+    StringBuilder report = new StringBuilder("Most Borrowed Items\n\n");
 
-        int max = 0;
-        
-        for (LibraryItem item : items) {
+    // Copy items into a new list for sorting
+    ArrayList<LibraryItem> sortedItems = new ArrayList<>(items);
 
-            if (item.getBorrowCount() > max) {
-                max = item.getBorrowCount();
-            }
+    // Sort by borrowCount (descending)
+    sortedItems.sort((a, b) -> Integer.compare(b.getBorrowCount(), a.getBorrowCount()));
 
-        }
-        
-        for (LibraryItem item : items) {
+    boolean found = false;
+    int rank = 1;
 
-        if (item.getBorrowCount() == max && max > 0) {
+    for (LibraryItem item : sortedItems) {
 
-            report.append("Title: ")
+        if (item.getBorrowCount() > 0) {
+
+            found = true;
+
+            report.append(rank)
+                  .append(". ")
                   .append(item.getTitle())
                   .append("\nTimes Borrowed: ")
                   .append(item.getBorrowCount())
                   .append("\n\n");
 
+            rank++;
         }
-
     }
 
-    if (max == 0) {
-
+    if (!found) {
         report.append("No borrowing activity recorded yet.");
-
     }
-        for (LibraryItem item : items) {
 
-            if (item.isBorrowed()) {
-
-                report.append("Book: ")
-                        .append(item.getTitle())
-                        .append("\nBorrowed by: ")
-                        .append(item.getBorrowedBy())
-                        .append("\n\n");
-
-            }
-
-        }
-        
-        return report.toString();
-
-    }
+    return report.toString();
+}
 
     // Overdue Users Report
     public static String overdueUsers(ArrayList<LibraryItem> items) {
@@ -100,7 +86,7 @@ public class ReportGenerator {
                     java.time.temporal.ChronoUnit.DAYS.between(
                             item.getBorrowDate(), today);
 
-            if (daysBorrowed > 14) {   // 14-day borrowing limit
+            if (daysBorrowed > 3) {   // 3-day borrowing limit
 
                 report.append("User: ")
                       .append(item.getBorrowedBy())
@@ -109,15 +95,12 @@ public class ReportGenerator {
                       .append("\nDays overdue: ")
                       .append(daysBorrowed - 14)
                       .append("\n\n");
-
             }
-
         }
-
     }
 
     return report.toString();
 
-}
+    }
     
 }

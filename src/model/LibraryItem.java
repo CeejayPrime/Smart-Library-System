@@ -40,6 +40,10 @@ public abstract class LibraryItem {
         return reservationQueue.poll();
     }
     
+    public int getReservationQueueSize() {
+     return reservationQueue.size();
+    }
+
     //Get time and date
     public java.time.LocalDate getBorrowDate() {
     return borrowDate;
@@ -79,8 +83,6 @@ public abstract class LibraryItem {
         return borrowedBy;
     }
     
-    
-
     // Setters
 
     public void setBorrowed(boolean borrowed) {
