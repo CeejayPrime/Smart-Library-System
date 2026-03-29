@@ -98,6 +98,51 @@ public class SearchEngine {
         }
 
     }
+    
+       public static void selectionSortByAuthor(ArrayList<LibraryItem> items) {
+
+    int n = items.size();
+
+    for (int i = 0; i < n - 1; i++) {
+
+        int minIndex = i;
+
+        for (int j = i + 1; j < n; j++) {
+
+            if (items.get(j).getAuthor()
+                    .compareToIgnoreCase(items.get(minIndex).getAuthor()) < 0) {
+
+                minIndex = j;
+            }
+        }
+
+        LibraryItem temp = items.get(i);
+        items.set(i, items.get(minIndex));
+        items.set(minIndex, temp);
+    }
+}
+    
+    public static void selectionSortByYear(ArrayList<LibraryItem> items) {
+
+    int n = items.size();
+
+    for (int i = 0; i < n - 1; i++) {
+
+        int minIndex = i;
+
+        for (int j = i + 1; j < n; j++) {
+
+            if (items.get(j).getYear() < items.get(minIndex).getYear()) {
+
+                minIndex = j;
+            }
+        }
+
+        LibraryItem temp = items.get(i);
+        items.set(i, items.get(minIndex));
+        items.set(minIndex, temp);
+    }
+}
 
     // Merge Sort
     public static void mergeSortByTitle(ArrayList<LibraryItem> items) {
@@ -151,5 +196,73 @@ public class SearchEngine {
         }
 
     }
+    private static void mergeByAuthor(ArrayList<LibraryItem> items,
+                                  ArrayList<LibraryItem> left,
+                                  ArrayList<LibraryItem> right) {
 
+        int i = 0, j = 0, k = 0;
+
+        while (i < left.size() && j < right.size()) {
+
+            if (left.get(i).getAuthor()
+                    .compareToIgnoreCase(right.get(j).getAuthor()) <= 0) {
+
+                items.set(k++, left.get(i++));
+            } else {
+                items.set(k++, right.get(j++));
+            }
+        }
+
+        while (i < left.size()) items.set(k++, left.get(i++));
+        while (j < right.size()) items.set(k++, right.get(j++));
+    }
+    public static void mergeSortByAuthor(ArrayList<LibraryItem> items) {
+
+        if (items.size() <= 1) return;
+
+        int mid = items.size() / 2;
+
+        ArrayList<LibraryItem> left = new ArrayList<>(items.subList(0, mid));
+        ArrayList<LibraryItem> right = new ArrayList<>(items.subList(mid, items.size()));
+
+        mergeSortByAuthor(left);
+        mergeSortByAuthor(right);
+
+        mergeByAuthor(items, left, right);
+    }
+    
+    public static void mergeSortByYear(ArrayList<LibraryItem> items) {
+
+    if (items.size() <= 1) return;
+
+    int mid = items.size() / 2;
+
+    ArrayList<LibraryItem> left = new ArrayList<>(items.subList(0, mid));
+    ArrayList<LibraryItem> right = new ArrayList<>(items.subList(mid, items.size()));
+
+    mergeSortByYear(left);
+    mergeSortByYear(right);
+
+    mergeByYear(items, left, right);
+}
+    
+    private static void mergeByYear(ArrayList<LibraryItem> items,
+                               ArrayList<LibraryItem> left,
+                               ArrayList<LibraryItem> right) {
+
+    int i = 0, j = 0, k = 0;
+
+    while (i < left.size() && j < right.size()) {
+
+        if (left.get(i).getYear() <= right.get(j).getYear()) {
+
+            items.set(k++, left.get(i++));
+        } else {
+            items.set(k++, right.get(j++));
+        }
+    }
+
+    while (i < left.size()) items.set(k++, left.get(i++));
+    while (j < right.size()) items.set(k++, right.get(j++));
+}
 }
