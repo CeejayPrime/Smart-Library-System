@@ -56,6 +56,8 @@ public class ReportGenerator {
             report.append(rank)
                   .append(". ")
                   .append(item.getTitle())
+                  .append("\nBorrowed by: ")
+                  .append(item.getBorrowedBy() != null ? item.getBorrowedBy() : "N/A")
                   .append("\nTimes Borrowed: ")
                   .append(item.getBorrowCount())
                   .append("\n\n");
