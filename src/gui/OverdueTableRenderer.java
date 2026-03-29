@@ -48,7 +48,7 @@ public class OverdueTableRenderer extends DefaultTableCellRenderer {
                         item.getBorrowDate(),
                         LocalDate.now());
 
-                if (daysBorrowed > 14) {
+                if (daysBorrowed > 1) {
 
                     c.setBackground(Color.RED);
                     c.setForeground(Color.WHITE);
