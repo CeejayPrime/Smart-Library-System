@@ -62,8 +62,66 @@ public MainWindow() {
 
     itemsTable.getTableHeader().repaint();
 }
-
+    
     private void refreshTable() {
+
+    javax.swing.table.DefaultTableModel model =
+        (javax.swing.table.DefaultTableModel) itemsTable.getModel();
+
+    model.setRowCount(0);
+
+    for (model.LibraryItem item : database.getItems()) {
+
+        String type = item.getClass().getSimpleName();
+
+        String status;
+
+        // ✅ STEP 1: Base status
+        if (item.isBorrowed()) {
+
+            String borrower = item.getBorrowedBy();
+
+            if (item.getReservationQueueSize() > 0) {
+
+                status = "Borrowed by " + borrower +
+                         " (" + item.getReservationQueueSize() + " waiting)";
+
+            } else {
+
+                status = "Borrowed by " + borrower;
+            }
+
+            // ✅ STEP 2: ADD OVERDUE HERE (INSIDE BORROWED BLOCK)
+            if (item.getBorrowDate() != null) {
+
+                long days =
+                    java.time.temporal.ChronoUnit.DAYS.between(
+                        item.getBorrowDate(),
+                        java.time.LocalDate.now());
+
+                if (days > 14) {
+
+                    status += " - Overdue (" + (days - 14) + " days)";
+                }
+            }
+
+        } else {
+
+            status = "Available";
+        }
+
+        model.addRow(new Object[]{
+            item.getId(),
+            item.getTitle(),
+            item.getAuthor(),
+            item.getYear(),
+            type,
+            status
+        });
+    }
+}
+
+    /*private void refreshTable() {
 
     javax.swing.table.DefaultTableModel model =
         (javax.swing.table.DefaultTableModel) itemsTable.getModel();
@@ -122,7 +180,7 @@ public MainWindow() {
 
     }
 
-}
+}*/
 
     /**
      * This method is called from within the constructor to initialize the form.

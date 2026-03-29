@@ -12,6 +12,7 @@ public class Book extends LibraryItem implements Borrowable {
     public String getIsbn() {
         return isbn;
     }
+   
 
     @Override
     public void borrowItem() {
@@ -27,4 +28,5 @@ public class Book extends LibraryItem implements Borrowable {
     public boolean isAvailable() {
         return !borrowed;
     }
+    
 }

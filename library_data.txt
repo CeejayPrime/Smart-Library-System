@@ -1,9 +1,9 @@
 ITEM1773569966900|ABC|DEF|1999|Magazine|false|null
 ITEM1773569975721|ABC|DEF|1999|Book|false|null
 ITEM1773569987555|ABC|DEF|1999|Journal|false|null
-ITEM1773518501479|COS202|Emeka Ogbuju|2026|Book|true|USER05
-ITEM1773518468136|Diary of a CEO|Robert Greene|2000|Book|true|USER06
-ITEM1773517442736|The 48 Laws of Power|Robert Greene|1990|Book|true|USER04
+ITEM1773518501479|COS202|Emeka Ogbuju|2026|Book|false|null
+ITEM1773518468136|Diary of a CEO|Robert Greene|2000|Book|false|null
+ITEM1773517442736|The 48 Laws of Power|Robert Greene|1990|Book|true|USER01
 ITEM1773518117190|The Laws of Seduction|Robert Greene|2000|Book|false|null
 ITEM1773477631081|Thinking, Fast and Slow|Daniel Kahneman|2011|Book|false|null
 ITEM1773866890590|Work-Life Success Principles|Promise Hassan|2004|Book|false|null
