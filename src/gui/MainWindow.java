@@ -11,7 +11,8 @@ package gui;
 public class MainWindow extends javax.swing.JFrame {
     
     private model.LibraryDatabase database = new model.LibraryDatabase();
-    
+    private String currentSortColumn = "";
+    private boolean ascending = true;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MainWindow.class.getName());
 
     /**
@@ -40,6 +41,28 @@ public MainWindow() {
     refreshTable();
 }
     
+    private void updateTableHeaders() {
+
+    javax.swing.table.TableColumnModel columnModel = itemsTable.getColumnModel();
+
+    for (int i = 0; i < columnModel.getColumnCount(); i++) {
+
+        String columnName = columnModel.getColumn(i).getHeaderValue().toString();
+
+        // Remove old arrows
+        columnName = columnName.replace(" ▲", "").replace(" ▼", "");
+
+        if (columnName.equals(currentSortColumn)) {
+
+            columnName += ascending ? " ▲" : " ▼";
+        }
+
+        columnModel.getColumn(i).setHeaderValue(columnName);
+    }
+
+    itemsTable.getTableHeader().repaint();
+}
+
     private void refreshTable() {
 
     javax.swing.table.DefaultTableModel model =
@@ -133,6 +156,11 @@ public MainWindow() {
         addItemButton = new javax.swing.JButton();
         deleteItemButton = new javax.swing.JButton();
         undoDeleteButton = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
+        categoryReportButton = new javax.swing.JButton();
+        borrowReportButton = new javax.swing.JButton();
+        overdueReportButton = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         searchField = new javax.swing.JTextField();
@@ -142,11 +170,8 @@ public MainWindow() {
         jLabel10 = new javax.swing.JLabel();
         sortAlgorithmCombo = new javax.swing.JComboBox<>();
         sortButton = new javax.swing.JButton();
-        jPanel6 = new javax.swing.JPanel();
-        categoryReportButton = new javax.swing.JButton();
-        borrowReportButton = new javax.swing.JButton();
-        overdueReportButton = new javax.swing.JButton();
-        jLabel7 = new javax.swing.JLabel();
+        sortByComboBox = new javax.swing.JComboBox<>();
+        jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -317,72 +342,6 @@ public MainWindow() {
 
         jTabbedPane1.addTab("Admin", jPanel3);
 
-        jLabel8.setText("Title");
-
-        searchButton.setText("Search");
-        searchButton.addActionListener(this::searchButtonActionPerformed);
-
-        jLabel9.setText("Search Algorithm");
-
-        searchAlgorithmCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Linear Search", "Binary Search", "Recursive Search" }));
-
-        jLabel10.setText("Sort Algorithm");
-
-        sortAlgorithmCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selection Sort", "Merge Sort" }));
-
-        sortButton.setText("Sort Items");
-        sortButton.addActionListener(this::sortButtonActionPerformed);
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(279, 279, 279)
-                .addComponent(jLabel8)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sortButton)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(searchAlgorithmCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel9))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(sortAlgorithmCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel10)))
-                            .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(searchButton)))
-                .addContainerGap(239, Short.MAX_VALUE))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(262, 262, 262)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchButton))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(searchAlgorithmCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sortAlgorithmCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(sortButton)
-                .addContainerGap(196, Short.MAX_VALUE))
-        );
-
-        jTabbedPane1.addTab("Search & Sort", jPanel4);
-
         categoryReportButton.setText("Category Distribution");
         categoryReportButton.addActionListener(this::categoryReportButtonActionPerformed);
 
@@ -422,6 +381,86 @@ public MainWindow() {
         );
 
         jTabbedPane1.addTab("Report", jPanel6);
+
+        jLabel8.setText("Title");
+
+        searchButton.setText("Search");
+        searchButton.addActionListener(this::searchButtonActionPerformed);
+
+        jLabel9.setText("Search Algorithm");
+
+        searchAlgorithmCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Linear Search", "Binary Search", "Recursive Search" }));
+
+        jLabel10.setText("Sort Algorithm");
+
+        sortAlgorithmCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selection Sort", "Merge Sort" }));
+
+        sortButton.setText("Sort Items");
+        sortButton.addActionListener(this::sortButtonActionPerformed);
+
+        sortByComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Title", "Author", "Year" }));
+        sortByComboBox.addActionListener(this::sortByComboBoxActionPerformed);
+
+        jLabel11.setText("Sort By");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(sortByComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel10)
+                                    .addComponent(sortAlgorithmCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(28, 28, 28)))
+                        .addComponent(sortButton)
+                        .addGap(68, 68, 68))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 348, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(searchAlgorithmCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addGap(18, 18, 18)
+                        .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(searchButton)))
+                .addGap(512, 512, 512))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(137, 137, 137)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(searchAlgorithmCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchButton))
+                .addGap(56, 56, 56)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sortByComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sortAlgorithmCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sortButton))
+                .addContainerGap(239, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Search & Sort", jPanel4);
 
         jLabel12.setBackground(java.awt.Color.lightGray);
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -684,38 +723,51 @@ public MainWindow() {
 
     private void sortButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortButtonActionPerformed
         // TODO add your handling code here:
-        String title = searchField.getText();
-    String algorithm = searchAlgorithmCombo.getSelectedItem().toString();
-
-    model.LibraryItem result = null;
-
-    if (algorithm.equals("Linear Search")) {
-
-        result = controller.SearchEngine.linearSearchByTitle(database.getItems(), title);
-
-    } else if (algorithm.equals("Binary Search")) {
-
-        controller.SearchEngine.selectionSortByTitle(database.getItems());
-        result = controller.SearchEngine.binarySearchByTitle(database.getItems(), title);
-
+      String sortBy = sortByComboBox.getSelectedItem().toString();
+    String algorithm = sortAlgorithmCombo.getSelectedItem().toString();
+    
+    // Toggle direction if same column
+    
+    if (sortBy.equals(currentSortColumn)) {
+        ascending = !ascending;
     } else {
-
-        result = controller.SearchEngine.recursiveSearchByTitle(database.getItems(), title, 0);
-
+        ascending = true;
+        currentSortColumn = sortBy;
     }
 
-    if (result != null) {
+    if (algorithm.equals("Selection Sort")) {
 
-        javax.swing.JOptionPane.showMessageDialog(this,
-                "Item Found:\nTitle: " + result.getTitle()
-                + "\nAuthor: " + result.getAuthor());
+        if (sortBy.equals("Title")) {
+            controller.SearchEngine.selectionSortByTitle(database.getItems());
 
-    } else {
+        } else if (sortBy.equals("Author")) {
+            controller.SearchEngine.selectionSortByAuthor(database.getItems());
 
-        javax.swing.JOptionPane.showMessageDialog(this,
-                "Item not found.");
+        } else if (sortBy.equals("Year")) {
+            controller.SearchEngine.selectionSortByYear(database.getItems());
+        }
 
+    } else if (algorithm.equals("Merge Sort")) {
+
+        if (sortBy.equals("Title")) {
+            controller.SearchEngine.mergeSortByTitle(database.getItems());
+
+        } else if (sortBy.equals("Author")) {
+            controller.SearchEngine.mergeSortByAuthor(database.getItems());
+
+        } else if (sortBy.equals("Year")) {
+            controller.SearchEngine.mergeSortByYear(database.getItems());
+
+        } 
+        // Optional: add mergeSortByYear too
     }
+    
+    if (!ascending) {
+        java.util.Collections.reverse(database.getItems());
+    }
+
+    updateTableHeaders();
+    refreshTable();
     }//GEN-LAST:event_sortButtonActionPerformed
 
     private void deleteItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteItemButtonActionPerformed
@@ -816,6 +868,10 @@ public MainWindow() {
         javax.swing.JOptionPane.showMessageDialog(this, report);
     }//GEN-LAST:event_overdueReportButtonActionPerformed
 
+    private void sortByComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortByComboBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sortByComboBoxActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -852,6 +908,7 @@ public MainWindow() {
     private javax.swing.JTable itemsTable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -875,6 +932,7 @@ public MainWindow() {
     private javax.swing.JTextField searchField;
     private javax.swing.JComboBox<String> sortAlgorithmCombo;
     private javax.swing.JButton sortButton;
+    private javax.swing.JComboBox<String> sortByComboBox;
     private javax.swing.JTextField titleField;
     private javax.swing.JComboBox<String> typeComboBox;
     private javax.swing.JButton undoDeleteButton;
