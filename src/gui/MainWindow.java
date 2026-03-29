@@ -521,39 +521,56 @@ public MainWindow() {
         return;
     }
 
-    model.UserAccount user = new model.UserAccount(userId, "User");
-
     for (model.LibraryItem item : database.getItems()) {
 
         if (item.getId().equals(itemId)) {
 
-            if (item.isBorrowed()) {
+            // 🔴 Case 1: Same user trying to borrow again
+            if (item.isBorrowed() && item.getBorrowedBy() != null && 
+                    userId.equalsIgnoreCase(item.getBorrowedBy())) {
 
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "You already borrowed this item.");
+
+                return;
+            }
+
+            // 🔴 Case 2: Another user tries to borrow
+            if (item.isBorrowed() && item.getBorrowedBy() != null &&
+                    !userId.equalsIgnoreCase(item.getBorrowedBy())) {
+
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "Item already borrowed by " + item.getBorrowedBy());
+
+                // Optional: add to reservation queue
+                model.UserAccount user = new model.UserAccount(userId, "User");
                 item.addToReservation(user);
 
                 javax.swing.JOptionPane.showMessageDialog(this,
-        "Item already borrowed.\nAdded to reservation queue.\nPosition: "
-        + item.getReservationQueueSize());
+                        "You have been added to the reservation queue.\nPosition: "
+                        + item.getReservationQueueSize());
 
-            } else {
-
-                item.setBorrowed(true);
-                item.setBorrowedBy(userId);
-                item.setBorrowDate(java.time.LocalDate.now());
-                item.borrowCount++;
-
-                javax.swing.JOptionPane.showMessageDialog(this,
-                        "\"" + item.getTitle() + "\" borrowed successfully.");
-
+                return;
             }
 
+            // 🟢 Case 3: Item is available
+            item.setBorrowed(true);
+            item.setBorrowedBy(userId);
+            item.setBorrowDate(java.time.LocalDate.now());
+            item.borrowCount++;
+
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "\"" + item.getTitle() + "\" borrowed successfully.");
+
             utils.FileHandler.saveItems(database.getItems(), "library_data.txt");
+
             refreshTable();
             return;
         }
     }
 
-    javax.swing.JOptionPane.showMessageDialog(this, "Item not found.");
+    javax.swing.JOptionPane.showMessageDialog(this,
+            "Item not found.");
     }//GEN-LAST:event_borrowButtonActionPerformed
 
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
