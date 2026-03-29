@@ -142,8 +142,6 @@ public MainWindow() {
         jLabel10 = new javax.swing.JLabel();
         sortAlgorithmCombo = new javax.swing.JComboBox<>();
         sortButton = new javax.swing.JButton();
-        jPanel5 = new javax.swing.JPanel();
-        jLabel11 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         categoryReportButton = new javax.swing.JButton();
         borrowReportButton = new javax.swing.JButton();
@@ -385,27 +383,6 @@ public MainWindow() {
 
         jTabbedPane1.addTab("Search & Sort", jPanel4);
 
-        jLabel11.setText("System Ready");
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(396, 396, 396)
-                .addComponent(jLabel11)
-                .addContainerGap(434, Short.MAX_VALUE))
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(290, 290, 290)
-                .addComponent(jLabel11)
-                .addContainerGap(278, Short.MAX_VALUE))
-        );
-
-        jTabbedPane1.addTab("Add Status", jPanel5);
-
         categoryReportButton.setText("Category Distribution");
         categoryReportButton.addActionListener(this::categoryReportButtonActionPerformed);
 
@@ -512,8 +489,7 @@ public MainWindow() {
         }
 
         String type = typeComboBox.getSelectedItem().toString();
-
-        String id = "ITEM" + System.currentTimeMillis();
+        String id = utils.IDGenerator.generateId();
 
         model.LibraryItem item;
 
@@ -859,7 +835,6 @@ public MainWindow() {
     private javax.swing.JTable itemsTable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -873,7 +848,6 @@ public MainWindow() {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
